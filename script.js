@@ -540,5 +540,10 @@ debugger;
 }
 
 
+// Відкрити теоретичний матеріал
+function openTheory() {
+    window.open('docs/theory.pdf', '_blank');
+}
+
 // Запускаємо ініціалізацію при завантаженні сторінки
 window.onload = initApp;
