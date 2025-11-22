@@ -741,3 +741,13 @@ footer {
     font-size: 0.9rem;
     color: #666;
 }
+.question-image {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    border-radius: var(--border-radius);
+    margin: 20px auto;
+    display: block;
+    box-shadow: var(--box-shadow);
+    border: 3px solid var(--primary-color);
+}

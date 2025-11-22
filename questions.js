@@ -6,6 +6,7 @@ window.questionsDatabase = {
         questions: {
             child: [
                 {
+                    img: "imgs/1-child.jpg",
                     text: "Що таке міна чи граната?",
                     options: ["Спортивний снаряд", "Це дуже небезпечна річ, яка може вибухнути", "Металева банка для сміття", "Звичайна іграшка"],
                     correct: 1,

@@ -197,7 +197,22 @@ function showQuestion() {
     document.getElementById('feedbackBox').style.display = 'none';
     document.getElementById('nextQuestionBtn').disabled = true;
 
-    document.getElementById('questionText').textContent = `${appState.currentQuestion + 1}. ${questionData.text}`;
+    const questionTextEl = document.getElementById('questionText');
+    questionTextEl.textContent = `${appState.currentQuestion + 1}. ${questionData.text}`;
+
+    // Add image if exists
+    const existingImg = questionTextEl.nextElementSibling;
+    if (existingImg && existingImg.classList.contains('question-image')) {
+        existingImg.remove();
+    }
+
+    if (questionData.img) {
+        const img = document.createElement('img');
+        img.src = questionData.img;
+        img.className = 'question-image';
+        img.alt = 'Ілюстрація до питання';
+        questionTextEl.after(img);
+    }
 
     const optionsContainer = document.getElementById('optionsContainer');
     optionsContainer.innerHTML = '';
