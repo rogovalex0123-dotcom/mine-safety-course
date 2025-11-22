@@ -1,0 +1,1745 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Курс мінної безпеки</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300,400,700,900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #0078d7; /* Освітній синій */
+            --primary-dark: #0056b3;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ff7f00; /* Помаранчевий (безпека/увага) */
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --mine-dark: #2c3e50;
+            --text-color: #333;
+            --border-radius: 12px;
+            --box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+            --card-hover-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s ease;
+
+            /* Нові кольори для яскравого сертифіката */
+            --cert-yellow: #ffeb3b;
+            --cert-blue: #2196f3;
+            --cert-purple: #9c27b0;
+            --cert-red: #f44336;
+            --cert-bg: #fffbf0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5faff 0%, #e6f2ff 100%);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* СТИЛІ ХЕДЕРА */
+        header {
+            position: relative;
+            text-align: left;
+            padding: 50px 40px;
+            color: white;
+            background-color: var(--mine-dark);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .header-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Заглушка для візуального ефекту */
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="c" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M-1,1 l2,-2 M0,10 l10,-10 M9,11 l2,-2" stroke="white" stroke-width="1" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23c)"/></svg>') repeat;
+            opacity: 0.8;
+            z-index: 1;
+        }
+
+        header h1, header .subtitle {
+            position: relative;
+            z-index: 2;
+            color: white;
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 1.4rem;
+            font-weight: 300;
+        }
+
+        /* СТАТИСТИКА */
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            background-color: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            border-top: 5px solid var(--primary-color);
+        }
+
+        .stats-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 10px 15px;
+        }
+
+        .stats-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--warning-color); /* Помаранчевий акцент на цифрах */
+        }
+
+        .stats-label {
+            font-size: 0.95rem;
+            color: var(--dark-color);
+            font-weight: 400;
+        }
+
+        /* ЗАГАЛЬНІ ЕКРАНИ */
+        .screen {
+            display: none;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ФОРМИ ТА ВІТАННЯ */
+        .welcome-screen {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .welcome-icon {
+            font-size: 4rem;
+            margin-bottom: 25px;
+            color: var(--primary-color);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--mine-dark);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1.05rem;
+            background-color: var(--light-color);
+            transition: var(--transition);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(0, 120, 215, 0.2);
+        }
+
+        /* КНОПКИ */
+        .btn {
+            display: inline-block;
+            padding: 14px 30px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            text-decoration: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .btn-warning {
+            background-color: var(--warning-color);
+            color: var(--dark-color);
+        }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+            color: white;
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+
+        /* КАРТКИ РІВНІВ */
+        .menu-screen {
+            text-align: center;
+        }
+
+        .levels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .level-card {
+            background-color: var(--light-color);
+            border-radius: var(--border-radius);
+            text-align: center;
+            transition: var(--transition);
+            border: 1px solid #e0e0e0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .level-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--card-hover-shadow);
+            border-color: var(--primary-color);
+        }
+
+        .level-image-container {
+            height: 180px;
+            overflow: hidden;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+
+        .level-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .level-card:hover .level-image {
+            transform: scale(1.05);
+        }
+
+        .level-content {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .level-title {
+            font-size: 1.6rem;
+            margin-bottom: 10px;
+            color: var(--mine-dark);
+        }
+
+        .level-description {
+            margin-bottom: 20px;
+            color: #666;
+            flex-grow: 1;
+        }
+
+        .level-stats {
+            font-size: 1rem;
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .level-card .btn {
+            width: 100%;
+        }
+
+        /* ЕКРАН ГРИ */
+        .game-screen {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        .progress-bar {
+            height: 12px;
+            background-color: #e9ecef;
+            border-radius: 6px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--success-color); /* Зелений прогрес */
+            border-radius: 6px;
+            transition: width 0.4s ease;
+        }
+
+        .question-text {
+            font-size: 1.4rem;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            font-weight: 500;
+            color: var(--mine-dark);
+        }
+
+        .options-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .option-btn {
+            padding: 18px 25px;
+            border: 2px solid var(--primary-color);
+            background-color: var(--light-color);
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            text-align: left;
+            transition: var(--transition);
+            font-weight: 400;
+        }
+
+        .option-btn:hover:not(.selected):not(.correct):not(.incorrect) {
+            background-color: rgba(0, 120, 215, 0.1);
+            transform: translateX(3px);
+            border-color: var(--primary-dark);
+        }
+
+        .option-btn.correct {
+            background-color: var(--success-color);
+            color: white;
+            border-color: var(--success-color);
+            font-weight: 600;
+        }
+
+        .option-btn.incorrect {
+            background-color: var(--danger-color);
+            color: white;
+            border-color: var(--danger-color);
+        }
+
+        .feedback-box {
+            padding: 25px;
+            border-radius: var(--border-radius);
+            margin-top: 25px;
+            border-left: 6px solid;
+            display: none;
+            font-size: 1.1rem;
+        }
+
+        .feedback-box.correct {
+            background-color: rgba(40, 167, 69, 0.1);
+            border-color: var(--success-color);
+            color: var(--success-color);
+        }
+
+        .feedback-box.incorrect {
+            background-color: rgba(220, 53, 69, 0.1);
+            border-color: var(--danger-color);
+            color: var(--danger-color);
+        }
+
+        .feedback-box p {
+            margin-bottom: 5px;
+        }
+
+        .feedback-explanation {
+            font-style: italic;
+            font-size: 1rem;
+            color: var(--dark-color);
+            margin-top: 10px;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 15px;
+        }
+
+        /* ПІДСУМКИ */
+        .summary-screen {
+            max-width: 850px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .summary-header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .summary-score {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--warning-color);
+            margin: 15px 0;
+        }
+
+        .summary-message {
+            font-size: 1.3rem;
+            color: var(--mine-dark);
+        }
+
+        .summary-details {
+            text-align: left;
+            margin-bottom: 30px;
+            max-height: 450px;
+            overflow-y: auto;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            background-color: var(--light-color);
+        }
+
+        .question-result {
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            border-left: 5px solid;
+        }
+
+        .question-result.correct {
+            border-color: var(--success-color);
+            background-color: rgba(40, 167, 69, 0.05);
+        }
+
+        .question-result.incorrect {
+            border-color: var(--danger-color);
+            background-color: rgba(220, 53, 69, 0.05);
+        }
+
+        .question-text-summary {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--mine-dark);
+        }
+
+        .answer-comparison {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.95rem;
+            margin-top: 5px;
+        }
+
+        .user-answer {
+            color: var(--danger-color);
+        }
+
+        .correct-answer {
+            color: var(--success-color);
+        }
+
+        .answer-info {
+            font-style: italic;
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 8px;
+        }
+
+        .summary-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .completion-message {
+            text-align: center;
+            padding: 30px;
+            background-color: rgba(40, 167, 69, 0.1);
+            border-radius: var(--border-radius);
+            margin: 20px 0;
+            display: none;
+            border: 2px solid var(--success-color);
+        }
+
+        .completion-message.show {
+            display: block;
+        }
+
+        .completion-icon {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            color: var(--success-color);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .subtitle {
+                font-size: 1.2rem;
+            }
+
+            .stats-bar {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .stats-item {
+                margin: 5px 0;
+            }
+
+            .levels-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .navigation-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .summary-actions {
+                flex-direction: column;
+            }
+
+            .screen {
+                padding: 25px;
+            }
+        }
+
+        /* ================================================= */
+        /* НОВІ СТИЛІ СЕРТИФІКАТА (стиль: "ІТ та Мінна безпека") */
+        /* ================================================= */
+
+        #customCertificate {
+            display: none; /* Приховано за замовчуванням */
+            width: 297mm; /* A4 Landscape width */
+            height: 210mm; /* A4 Landscape height */
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            margin: 0 auto;
+            background-color: var(--cert-bg);
+            border: 10px solid var(--primary-color);
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 50px;
+            text-align: center;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        .style-element {
+            position: absolute;
+            font-size: 150px;
+            opacity: 0.4;
+            pointer-events: none;
+            filter: blur(1px);
+            z-index: 0;
+            font-family: 'Arial', sans-serif; /* Для кращого відображення символів */
+        }
+
+        .style-element:nth-child(1) { /* Angry Sun (Safety warning) */
+            top: -20px;
+            left: -30px;
+            color: var(--cert-red);
+            transform: rotate(-15deg);
+        }
+
+        .style-element:nth-child(2) { /* Happy Star (IT/Success) */
+            top: -50px;
+            right: -50px;
+            color: var(--cert-yellow);
+            transform: rotate(10deg);
+        }
+
+        .style-element:nth-child(3) { /* Crying Blue Cat (Warning/Caution) */
+            bottom: -50px;
+            left: -50px;
+            color: var(--cert-blue);
+            transform: rotate(5deg);
+        }
+
+        .style-element:nth-child(4) { /* Sad Purple Cat (Danger area) */
+            bottom: -30px;
+            right: -30px;
+            color: var(--cert-purple);
+            transform: rotate(-8deg);
+        }
+
+        /* Текстовий контент */
+        .cert-content-inner {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        .cert-title {
+            font-size: 7rem;
+            font-weight: 900;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            line-height: 1;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .cert-preamble {
+            font-size: 1.5rem;
+            color: var(--dark-color);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .cert-recipient {
+            font-size: 3.5rem;
+            color: var(--mine-dark);
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .cert-course-topic {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--danger-color);
+            margin-bottom: 20px;
+            line-height: 1.2;
+            text-transform: uppercase;
+        }
+
+        .cert-motto-badge {
+            display: inline-block;
+            background-color: var(--success-color);
+            color: white;
+            padding: 10px 30px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-style: italic;
+            font-size: 1.4rem;
+            margin-top: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .cert-metrics {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 30px 0;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .cert-metric-item {
+            padding: 10px 20px;
+            background-color: var(--light-color);
+            border-radius: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .cert-metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+
+        .cert-signature-block {
+            margin-top: auto; /* Push to bottom */
+            display: flex;
+            justify-content: space-around;
+            width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cert-signature-item {
+            text-align: center;
+            flex: 1;
+            margin: 0 10px;
+        }
+
+        .cert-signature-line {
+            border-bottom: 2px solid var(--dark-color);
+            padding-bottom: 5px;
+            font-size: 1.1rem;
+            height: 30px;
+            margin-bottom: 5px;
+        }
+
+        .cert-signature-item p {
+            font-size: 0.9rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="header-background"></div>
+        <h1> ⚠️ Курс мінної безпеки</h1>
+        <p class="subtitle">Інтерактивний навчальний курс з життєво важливих правил</p>
+    </header>
+
+    <div class="stats-bar">
+        <div class="stats-item">
+            <div class="stats-value" id="totalScore">0</div>
+            <div class="stats-label">Загальний рахунок</div>
+        </div>
+        <div class="stats-item">
+            <div class="stats-value" id="completedLevels">0/3</div>
+            <div class="stats-label">Завершені рівні</div>
+        </div>
+        <div class="stats-item">
+            <div class="stats-value" id="correctAnswers">0%</div>
+            <div class="stats-label">Правильних відповідей</div>
+        </div>
+    </div>
+
+    <div class="screen welcome-screen active" id="welcomeScreen">
+        <div class="welcome-icon">👋</div>
+        <h2>Ласкаво просимо!</h2>
+        <p>Перед початком курсу, будь ласка, введіть ваші дані та оберіть вікову категорію, щоб отримати адаптовані
+            питання. Це забезпечить максимально комфортне та корисне навчання.</p>
+        <div class="form-group">
+            <label for="userNameInput">Ваше ім'я (або псевдонім):</label>
+            <input type="text" id="userNameInput" placeholder="Іван">
+        </div>
+        <div class="form-group">
+            <label for="userAgeSelect">Ваша вікова категорія:</label>
+            <select id="userAgeSelect">
+                <option value="child">Молодша школа (1-4 класи)</option>
+                <option value="teen">Середня школа (5-9 класи)</option>
+                <option value="adult" selected>Старша школа (10-11 класи / Дорослі)</option>
+            </select>
+        </div>
+        <button class="btn btn-block" onclick="startApp()">Почати навчання →</button>
+    </div>
+
+    <div class="screen menu-screen" id="menuScreen">
+        <h2>Оберіть рівень для початку</h2>
+        <div class="completion-message" id="allLevelsComplete">
+            <div class="completion-icon">🏆</div>
+            <p>Вітаємо! Ви успішно пройшли всі рівні курсу!</p>
+            <button class="btn btn-success" onclick="generatePDF(true)"> 📄 Завантажити Сертифікат Проходження</button>
+        </div>
+        <div class="levels-grid" id="levelsGrid">
+        </div>
+        <button class="btn btn-warning" onclick="saveProgress()">💾 Зберегти прогрес</button>
+    </div>
+
+    <div class="screen game-screen" id="gameScreen">
+        <h2 id="levelTitleHeader">Назва Рівня</h2>
+        <p id="levelDescriptionHeader"></p>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="question-container">
+            <p class="question-text" id="questionText"></p>
+            <div class="options-container" id="optionsContainer">
+            </div>
+            <div class="feedback-box" id="feedbackBox">
+                <p><strong>Результат:</strong> <span id="feedbackResult"></span></p>
+                <p class="feedback-explanation" id="feedbackExplanation"></p>
+            </div>
+        </div>
+        <div class="navigation-buttons">
+            <button class="btn" onclick="returnToMenu()">← Повернутися до меню</button>
+            <button class="btn btn-success" id="nextQuestionBtn" onclick="nextQuestion()" disabled>Наступне питання →
+            </button>
+        </div>
+    </div>
+
+    <div class="screen summary-screen" id="summaryScreen">
+        <div class="summary-header">
+            <h2 id="summaryTitle">Підсумки рівня</h2>
+            <div class="summary-score" id="summaryScore">0 балів</div>
+            <p class="summary-message" id="summaryMessage"></p>
+        </div>
+        <div class="summary-details" id="summaryDetails"></div>
+        <div class="summary-actions">
+            <button class="btn" onclick="returnToMenu()">← Повернутися до меню</button>
+            <button class="btn btn-danger" onclick="generatePDF(false)"> ⬇️ Завантажити Звіт PDF</button>
+            <button class="btn btn-success" id="nextLevelBtn" onclick="startNextLevel()">Наступний рівень →</button>
+        </div>
+    </div>
+
+    <div id="customCertificate">
+        <div class="style-element">❌</div>
+        <div class="style-element">💡</div>
+        <div class="style-element">🛡️</div>
+        <div class="style-element">💻</div>
+
+        <div class="cert-content-inner">
+            <div>
+                <div class="cert-title">СЕРТИФІКАТ</div>
+
+                <p class="cert-preamble">ЦЕЙ СЕРТИФІКАТ ЗАСВІДЧУЄ, ЩО</p>
+
+                <h2 class="cert-recipient" id="certRecipientName">[Ім'я Користувача]</h2>
+
+                <p class="cert-preamble" style="font-size: 1.5rem; color: var(--primary-color); margin-bottom: 15px;">
+                    УСПІШНО ПРОЙШОВ/ПРОЙШЛА НАВЧАЛЬНИЙ КУРС</p>
+
+                <div class="cert-course-topic">
+                    «МІННА БЕЗПЕКА ТА ІТ»
+                </div>
+            </div>
+
+            <div>
+                <div class="cert-motto-badge">
+                    Знання – запорука безпеки
+                </div>
+                <div class="cert-metrics">
+                    <div class="cert-metric-item">
+                        Загальний рахунок:<br>
+                        <span class="cert-metric-value" id="certScore">0/0</span> балів
+                    </div>
+                    <div class="cert-metric-item">
+                        Правильних відповідей:<br>
+                        <span class="cert-metric-value" id="certCorrect">0/0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cert-signature-block">
+                <div class="cert-signature-item">
+                    <div class="cert-signature-line"></div>
+                    <p>Координатор курсу</p>
+                </div>
+                <div class="cert-signature-item">
+                    <div class="cert-signature-line" id="certDateLine"></div>
+                    <p>Дата видачі</p>
+                </div>
+                <div class="cert-signature-item">
+                    <div class="cert-signature-line"></div>
+                    <p>Підпис</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p>© 2025 Курс мінної безпеки..</p>
+    </footer>
+</div>
+
+<script>
+    // Глобальні змінні
+    const appState = {
+        currentScreen: 'welcome',
+        userName: 'Гість',
+        userAge: 'adult',
+        currentLevel: 0,
+        currentQuestion: 0,
+        score: 0,
+        levelScores: {1: 0, 2: 0, 3: 0},
+        levelAnswers: {1: [], 2: [], 3: []},
+        levelCompleted: {1: false, 2: false, 3: false},
+        totalQuestions: 0,
+        correctAnswers: 0,
+        currentShuffledOptions: [] // Додано для зберігання перемішаних опцій
+    };
+
+    // Зображення для карток рівнів (заглушки для візуалізації)
+    const levelImages = {
+        1: 'https://placehold.co/600x400/2c3e50/f8f9fa?text=General+Safety', // Темний фон, світлий текст
+        2: 'https://placehold.co/600x400/dc3545/f8f9fa?text=UXO+Protocol', // Червоний фон
+        3: 'https://placehold.co/600x400/ff7f00/2c3e50?text=First+Aid' // Помаранчевий фон
+    };
+
+    // --- БАЗА ДАНИХ ПИТАНЬ ---
+    const questionsDatabase = {
+        1: {
+            title: "Рівень 1: Загальна безпека (Основи)",
+            description: "Питання про види небезпек, ознаки мінної загрози та запобігання.",
+            questions: {
+                child: [
+                    {
+                        text: "Що таке міна чи граната?",
+                        options: ["Спортивний снаряд", "Це дуже небезпечна річ, яка може вибухнути", "Металева банка для сміття", "Звичайна іграшка"],
+                        correct: 1,
+                        explanation: "Це вибухонебезпечні предмети. Категорично заборонено їх чіпати."
+                    },
+                    {
+                        text: "Чи можна гратися з незнайомими металевими або пластмасовими предметами на вулиці?",
+                        options: ["Так, якщо блищить", "Ні, не можна, це може бути небезпечно", "Тільки якщо схоже на м'яч", "Можна, якщо поруч дорослі"],
+                        correct: 1,
+                        explanation: "Навіть якщо предмет схожий на іграшку, він може бути вибухонебезпечним. Не чіпайте його."
+                    },
+                    {
+                        text: "Якого кольору можуть бути небезпечні предмети?",
+                        options: ["Тільки червоного", "Тільки чорного", "Будь-якого, тому не можна нічого піднімати", "Тільки металевого"],
+                        correct: 2,
+                        explanation: "Міни можуть бути замасковані під будь-який предмет і мати будь-який колір."
+                    },
+                    {
+                        text: "Чи можна заходити у старі покинуті будинки чи підвали?",
+                        options: ["Так, щоб дослідити", "Ні, це дуже небезпечно, там можуть бути вибухівки", "Можна, але тільки на 5 хвилин", "Тільки якщо ти сміливий"],
+                        correct: 1,
+                        explanation: "Покинуті будівлі та підвали часто використовуються для встановлення мін-пасток."
+                    },
+                    {
+                        text: "Як ми повинні поводитися на вулиці, щоб бути в безпеці?",
+                        options: ["Бігти швидко і не дивитися під ноги", "Ходити тільки доріжками і нічого не піднімати", "Залазити в усі кущі", "Підіймати всі гарні камінці"],
+                        correct: 1,
+                        explanation: "Треба ходити тільки перевіреними доріжками і нічого не піднімати з землі."
+                    }
+                ],
+                teen: [
+                    {
+                        text: "Що таке вибухонебезпечний предмет (ВНП)? Дайте визначення.",
+                        options: ["Предмет, який голосно свистить", "Будь-який предмет, що містить вибухову речовину і може вибухнути", "Тільки протитанкові міни", "Залишки військової форми"],
+                        correct: 1,
+                        explanation: "ВНП – це боєприпаси, що містять вибухові речовини і можуть детонувати при зовнішньому впливі."
+                    },
+                    {
+                        text: "Назвіть основні види ВНП.",
+                        options: ["Іграшки, батарейки", "Міни, гранати, снаряди", "Світлові ракети, петарди", "Каміння і палиці"],
+                        correct: 1,
+                        explanation: "До ВНП належать міни (протипіхотні, протитанкові), гранати, артилерійські снаряди тощо."
+                    },
+                    {
+                        text: "Які місця вважаються найбільш небезпечними з точки зору мінної загрози?",
+                        options: ["Центральні площі міст", "Дитячі майданчики", "Окопи, узбіччя, покинуті будівлі", "Оброблені поля"],
+                        correct: 2,
+                        explanation: "Найбільш небезпечні території, де велися бойові дії: окопи, лісосмуги, узбіччя, покинуті об'єкти."
+                    },
+                    {
+                        text: "Які знаки попередження про мінну небезпеку ви знаєте?",
+                        options: ["Синій квадрат з написом 'Вхід'", "Червоний трикутник з черепом або написом 'МІНИ'", "Жовта стрічка без тексту", "Білий прапор"],
+                        correct: 1,
+                        explanation: "Офіційний знак – червоний трикутник. Також можуть бути таблички, стрічки чи розмітки."
+                    },
+                    {
+                        text: "Як довго міни можуть залишатися небезпечними після закінчення бойових дій?",
+                        options: ["Лише 24 години", "Десятки років", "Не більше 1 місяця", "До першого дощу"],
+                        correct: 1,
+                        explanation: "Навіть через десятки років міни зберігають свою вибухову силу і є небезпечними."
+                    }
+                ],
+                adult: [
+                    {
+                        text: "Проаналізуйте принцип дії основних типів мін.",
+                        options: ["Спрацьовують лише від температури", "Залежать від типу: натиск, розтяжка, нахил", "Усі спрацьовують однаково", "Реагують лише на звук"],
+                        correct: 1,
+                        explanation: "Міни активуються різними способами: тиском (натисканням), натягом дроту (розтяжкою) або зміною положення (датчик нахилу)."
+                    },
+                    {
+                        text: "Що таке касетні боєприпаси і чому вони становлять особливу небезпеку?",
+                        options: ["Великі міни, що лежать глибоко", "Снаряди, що розкидають велику кількість нерозірваних дрібних елементів", "Старі гармати", "Пристрої для розмінування"],
+                        correct: 1,
+                        explanation: "Касетні боєприпаси розкидають десятки міні-боєприпасів, багато з яких не детонують і перетворюються на ВНП."
+                    },
+                    {
+                        text: "Що таке 'Оттавська конвенція' і які види мін вона забороняє?",
+                        options: ["Правила пересування техніки", "Міжнародний договір, що забороняє протипіхотні міни", "Договір про торгівлю зброєю", "Правила роботи саперів"],
+                        correct: 1,
+                        explanation: "Оттавська конвенція (1997) — це міжнародний договір, що забороняє використання, зберігання, виробництво та передачу протипіхотних мін."
+                    },
+                    {
+                        text: "Як інформаційна безпека пов'язана з мінною?",
+                        options: ["Ніяк не пов'язана", "Поширення фейків про мінні поля, що створює хибне відчуття безпеки", "Шифрування карт", "Захист комп'ютерів саперів"],
+                        correct: 1,
+                        explanation: "Фейкова інформація про мінні поля або небезпечні зони може змусити людей поводитися небезпечно."
+                    },
+                    {
+                        text: "Які технології використовуються для пошуку та знешкодження ВНП?",
+                        options: ["Ручні лопати та відра", "Спеціалізовані металодетектори, георадари, БПЛА, роботи", "Звичайні мобільні телефони", "Малювання крейдою"],
+                        correct: 1,
+                        explanation: "Використовуються професійні пристрої: дрони для розвідки, георадари для підземного сканування, роботи для знешкодження."
+                    }
+                ]
+            }
+        },
+        2: {
+            title: "Рівень 2: Поведінка при виявленні ВНП (Алгоритми)",
+            description: "Алгоритми дій, безпечні відстані та протоколи зв'язку зі службами.",
+            questions: {
+                child: [
+                    {
+                        text: "Яке головне правило, якщо ти побачив щось схоже на міну?",
+                        options: ["Підійди і розглянь", "Не чіпати, відійти і покликати дорослого", "Кинути палицю", "Накрити листям"],
+                        correct: 1,
+                        explanation: "Ніколи не торкайтеся, не наближайтеся і не намагайтеся рухати підозрілі предмети."
+                    },
+                    {
+                        text: "Як далеко потрібно відійти від небезпечної знахідки?",
+                        options: ["3 кроки", "Якнайдалі, на безпечну відстань (до 100м)", "На відстань витягнутої руки", "Не відходити"],
+                        correct: 1,
+                        explanation: "Безпечна відстань від більшості ВНП – 50-100 метрів. Чим далі, тим краще."
+                    },
+                    {
+                        text: "Що потрібно крикнути друзям, якщо вони хочуть підійти до знахідки?",
+                        options: ["Ходімо гратися!", "Стійте! Не чіпайте! Небезпека!", "Це моя знахідка!", "Тихо, не шуміть!"],
+                        correct: 1,
+                        explanation: "Необхідно негайно попередити всіх, хто поруч, про небезпеку."
+                    },
+                    {
+                        text: "Чи можна самому спробувати віднести знахідку дорослим?",
+                        options: ["Так, якщо вона маленька", "Ні, предмет не можна рухати", "Тільки якщо ти у рукавичках", "Можна, якщо обережно"],
+                        correct: 1,
+                        explanation: "Переміщення ВНП є смертельно небезпечним. Цим займаються лише фахівці."
+                    },
+                    {
+                        text: "Який номер телефону треба набрати, щоб повідомити про небезпечну знахідку?",
+                        options: ["03", "101 або 102", "0800", "109"],
+                        correct: 1,
+                        explanation: "101 (ДСНС), 102 (Поліція) або єдиний номер 112."
+                    }
+                ],
+                teen: [
+                    {
+                        text: "Опишіть чіткий алгоритм дій при виявленні підозрілого предмету.",
+                        options: ["Підійти, сфотографувати, викласти в мережу", "Зупинитися, відійти, попередити, викликати служби (101/102)", "Торкнутися, перевірити, чи працює", "Позначити і піти далі"],
+                        correct: 1,
+                        explanation: "Головний алгоритм: не наближатися, відійти тим самим шляхом, попередити, зателефонувати фахівцям."
+                    },
+                    {
+                        text: "Чому не можна використовувати мобільний телефон поблизу ВНП?",
+                        options: ["Щоб не розрядити батарею", "Електромагнітне випромінювання може спровокувати вибух", "Щоб не заважати саперам", "Тому що там немає зв'язку"],
+                        correct: 1,
+                        explanation: "Радіосигнал або електромагнітне випромінювання мобільного телефону може спровокувати детонацію деяких ВНП."
+                    },
+                    {
+                        text: "Що робити, якщо ви виявили ВНП у приміщенні?",
+                        options: ["Відкрити вікна для провітрювання", "Не чіпати, вийти, закрити двері, викликати служби", "Спробувати винести на вулицю", "Залишитися і чекати саперів"],
+                        correct: 1,
+                        explanation: "Потрібно обережно залишити приміщення, не змінюючи освітлення/вентиляції, та закрити доступ."
+                    },
+                    {
+                        text: "Як правильно евакуюватися з небезпечної зони?",
+                        options: ["Бігти якнайшвидше в бік", "Йти обережно, тим самим шляхом, яким прийшов", "Стрибати, щоб не торкнутися землі", "Повзти"],
+                        correct: 1,
+                        explanation: "Йти треба своїми слідами, щоб не наступити на іншу міну. Не бігти, щоб не впасти і не спровокувати розтяжку."
+                    },
+                    {
+                        text: "Які служби потрібно викликати при виявленні ВНП?",
+                        options: ["03, 04", "101, 102, 112", "Швидка допомога і таксі", "Тільки поліцію"],
+                        correct: 1,
+                        explanation: "Потрібно викликати ДСНС (101) або Національну поліцію (102), або єдину службу порятунку (112)."
+                    }
+                ],
+                adult: [
+                    {
+                        text: "Які фактори можуть вказувати на те, що територія може бути мінно-небезпечною, окрім офіційних знаків?",
+                        options: ["Яскраве сонце і спів пташок", "Сліди бойових дій, покинута військова техніка, порушений ґрунт", "Багато сміття", "Висока трава"],
+                        correct: 1,
+                        explanation: "Ознаками є пошкоджені будівлі, залишки окопів, кинута техніка та нерівності ґрунту."
+                    },
+                    {
+                        text: "Як правильно організувати очікування саперів, перебуваючи на безпечній відстані?",
+                        options: ["Скликати всіх сусідів", "Не допускати скупчення людей, за можливості огороджуючи небезпечну зону підручними засобами", "Бігти за допомогою до найближчого села", "Знімати відео для соцмереж"],
+                        correct: 1,
+                        explanation: "Головне — забезпечити безпеку та не дозволити іншим потрапити в небезпечну зону до прибуття фахівців."
+                    },
+                    {
+                        text: "Сформулюйте чіткий зразок повідомлення оператору служби 102 про ВНП.",
+                        options: ["Розповісти довгу історію", "Назвати точне місце (координати/адресу), описати предмет, назвати своє ім'я та телефон", "Кричати в трубку", "Сказати 'десь тут'"],
+                        correct: 1,
+                        explanation: "Максимально точна інформація (координати, опис) прискорює реагування."
+                    },
+                    {
+                        text: "Чи можна використовувати підручні засоби для огородження небезпечної зони? Як це зробити безпечно?",
+                        options: ["Ні, огороджувати повинні тільки сапери", "Так, але тільки з безпечної відстані, використовуючи гілки, стрічки", "Треба накрити предмет великим каменем", "Можна обійти предмет і поставити прапорець"],
+                        correct: 1,
+                        explanation: "Огородження підручними засобами допустиме, але тільки якщо це не вимагає наближення до ВНП."
+                    },
+                    {
+                        text: "Які ваші дії, якщо ви вже торкнулися ВНП, але вибуху не сталося?",
+                        options: ["Різко відскочити назад", "Зафіксувати положення тіла, не рухатися, гучно покликати на допомогу", "Спробувати відштовхнути предмет ногою", "Повільно відповзти"],
+                        correct: 1,
+                        explanation: "Будь-який рух може стати детонатором. Слід зафіксуватися і чекати на допомогу."
+                    }
+                ]
+            }
+        },
+        3: {
+            title: "Рівень 3: Наслідки та допомога (Перша допомога)",
+            description: "Фактори ураження, перша домедична допомога при травмах, психологічні аспекти.",
+            questions: {
+                child: [
+                    {
+                        text: "Що може статися, якщо підійти занадто близько до міни?",
+                        options: ["Вона заспіває пісеньку", "Вона може вибухнути", "Вона стане гарячою", "Вона стане іграшкою"],
+                        correct: 1,
+                        explanation: "Вибух – це основна небезпека ВНП."
+                    },
+                    {
+                        text: "Які травми можна отримати від вибуху?",
+                        options: ["Подряпини", "Сильно поранитися або загинути", "Невеликий переляк", "Біль у животі"],
+                        correct: 1,
+                        explanation: "Вибух спричиняє осколкові, баротравматичні та термічні поранення."
+                    },
+                    {
+                        text: "Хто приходить на допомогу, якщо хтось поранився через вибух?",
+                        options: ["Продавець морозива", "Лікарі (103), пожежні (101), поліція (102)", "Тільки батьки", "Ніхто"],
+                        correct: 1,
+                        explanation: "Потрібно викликати екстрені служби: швидку, поліцію, ДСНС."
+                    },
+                    {
+                        text: "Як ми можемо допомогти другові, якщо він хоче підійти до небезпечного предмету?",
+                        options: ["Сказати, що це негарно", "Зупинити, відтягнути і швидко розповісти дорослому", "Зняти його на відео", "Сміятися з нього"],
+                        correct: 1,
+                        explanation: "Головне — фізично зупинити небезпечну дію і повідомити дорослих."
+                    },
+                    {
+                        text: "Чому важливо завжди слухатися дорослих, коли вони говорять про безпеку?",
+                        options: ["Щоб отримати цукерку", "Тому що вони хочуть нас захистити від небезпеки", "Щоб добре поводитися", "Щоб швидше вирости"],
+                        correct: 1,
+                        explanation: "Правила безпеки дорослих створені для захисту дітей від небезпеки."
+                    }
+                ],
+                teen: [
+                    {
+                        text: "Які основні фактори ураження при вибуху ВНП?",
+                        options: ["Світло і шум", "Ударна хвиля, осколки, висока температура", "Холод і вода", "Вітер і пил"],
+                        correct: 1,
+                        explanation: "Основні фактори: ударна хвиля, що викликає контузію; осколки, що спричиняють поранення; та висока температура."
+                    },
+                    {
+                        text: "Що таке контузія і які її ознаки?",
+                        options: ["Синець на нозі", "Травма мозку від ударної хвилі (запаморочення, нудота, втрата свідомості)", "Сильний переляк", "Застуда"],
+                        correct: 1,
+                        explanation: "Контузія (баротравма) — це ураження організму, викликане ударною хвилею, що часто призводить до порушення роботи мозку."
+                    },
+                    {
+                        text: "Як надати першу допомогу при сильній кровотечі?",
+                        options: ["Прикласти листочок подорожника", "Накласти турнікет або джгут вище місця поранення", "Промити рану водою", "Перев'язати шарфом"],
+                        correct: 1,
+                        explanation: "Критична кровотеча вимагає негайного накладання турнікета або джгута для її зупинки."
+                    },
+                    {
+                        text: "Чому важливо не пересувати людину з важкими травмами без крайньої необхідності?",
+                        options: ["Щоб не забруднити одяг", "Щоб не завдати додаткових ушкоджень (особливо хребту)", "Щоб вона відпочила", "Щоб не заважати медикам"],
+                        correct: 1,
+                        explanation: "Переміщення може посилити травму хребта, внутрішню кровотечу або ураження кінцівок."
+                    },
+                    {
+                        text: "Хто такі кінологи-вибухотехніки і яку роль вони відіграють?",
+                        options: ["Дресирувальники тварин", "Фахівці, які використовують спеціально навчених собак для пошуку вибухівки", "Ветеринари", "Поліцейські без собак"],
+                        correct: 1,
+                        explanation: "Собаки-шукачі (кінологи) допомагають швидко ідентифікувати місцезнаходження ВНП."
+                    }
+                ],
+                adult: [
+                    {
+                        text: "Який алгоритм надання першої допомоги при політравмі, отриманій внаслідок вибуху?",
+                        options: ["Негайно дати знеболювальне", "Оцінка безпеки, зупинка критичної кровотечі (ТССС), виклик 103", "Перев'язати всі рани бинтом", "Сфотографувати місце події"],
+                        correct: 1,
+                        explanation: "Пріоритет: безпека, зупинка кровотечі (за протоколом TCCC), виклик медиків."
+                    },
+                    {
+                        text: "Які особливості накладання джгута при осколкових пораненнях кінцівок?",
+                        options: ["Накладати тільки на одяг", "Накладати максимально швидко, вище місця поранення, зафіксувати час накладання", "Накладати близько до рани", "Накладати і знімати кожні 15 хвилин"],
+                        correct: 1,
+                        explanation: "Джгут накладається для швидкої зупинки кровотечі. Фіксація часу потрібна для контролю тривалості перетискання."
+                    },
+                    {
+                        text: "Яку роль відіграє психологічна допомога (PFA - Psychological First Aid) постраждалим і свідкам події?",
+                        options: ["Лікування психічних розладів", "Надання практичної допомоги та підтримки, заспокоєння", "Проведення детальних інтерв'ю", "Розповсюдження інформації"],
+                        correct: 1,
+                        explanation: "PFA – це надання емоційної підтримки та практичної допомоги для стабілізації стану після травматичної події."
+                    },
+                    {
+                        text: "Як суспільство може сприяти реінтеграції ветеранів та цивільних осіб, які постраждали від мін?",
+                        options: ["Уникати розмов про міни", "Подолання стигматизації, підтримка освітніх та реабілітаційних програм", "Створювати спеціальні 'закриті' групи", "Обмежувати доступ до роботи"],
+                        correct: 1,
+                        explanation: "Важлива соціальна підтримка, відсутність дискримінації та доступ до реабілітації."
+                    },
+                    {
+                        text: "Як розпізнати ознаки посттравматичного стресового розладу (ПТСР)?",
+                        options: ["Постійний сміх і радість", "Нав'язливі спогади, кошмари, уникання ситуацій-нагадувань, сильна тривожність", "Фізична втома", "Посилення апетиту"],
+                        correct: 1,
+                        explanation: "ПТСР характеризується повторним переживанням травми, униканням, негативними змінами у мисленні та надмірним збудженням."
+                    }
+                ]
+            }
+        }
+    };
+
+    // --- ДОПОМІЖНІ ФУНКЦІЇ ДЛЯ ОТРИМАННЯ ПИТАНЬ ---
+    function getCurrentLevelQuestions() {
+        const level = appState.currentLevel;
+        const age = appState.userAge;
+        return questionsDatabase[level].questions[age];
+    }
+
+    function getCurrentQuestionData() {
+        const questions = getCurrentLevelQuestions();
+        return questions[appState.currentQuestion];
+    }
+
+    // --- ФУНКЦІЯ ПЕРЕМІШУВАННЯ (Fisher-Yates) ---
+    function shuffleArray(array) {
+        let currentIndex = array.length, randomIndex;
+        while (currentIndex !== 0) {
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex--;
+            [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+        }
+        return array;
+    }
+
+    // --- КІНЕЦЬ ДОПОМІЖНИХ ФУНКЦІЙ ---
+
+
+    // Ініціалізація додатку
+    function initApp() {
+        updateStats();
+        renderLevelsMenu();
+        // Відновлення прогресу з локального сховища
+        const savedProgress = localStorage.getItem('mineSafetyProgress');
+        if (savedProgress) {
+            const progress = JSON.parse(savedProgress);
+            if (!progress.userAge) {
+                progress.userAge = document.getElementById('userAgeSelect').value;
+            }
+            Object.assign(appState, progress);
+            document.getElementById('userNameInput').value = appState.userName;
+            document.getElementById('userAgeSelect').value = appState.userAge;
+            updateStats();
+            renderLevelsMenu();
+        }
+    }
+
+    // Оновлення статистики
+    function updateStats() {
+        const totalScore = Object.values(appState.levelScores).reduce((sum, score) => sum + score, 0);
+        const completedLevelsCount = Object.values(appState.levelCompleted).filter(isCompleted => isCompleted).length;
+
+        let totalCorrect = 0;
+        let totalAnswered = 0;
+        for (const level in appState.levelAnswers) {
+            totalCorrect += appState.levelAnswers[level].filter(a => a.isCorrect).length;
+            totalAnswered += appState.levelAnswers[level].length;
+        }
+
+        appState.correctAnswers = totalCorrect;
+
+        const correctPercentage = totalAnswered > 0 ? ((totalCorrect / totalAnswered) * 100).toFixed(0) : 0;
+
+        document.getElementById('totalScore').textContent = totalScore;
+        document.getElementById('completedLevels').textContent = `${completedLevelsCount}/3`;
+        document.getElementById('correctAnswers').textContent = `${correctPercentage}%`;
+
+        // Показати повідомлення про повне проходження
+        if (completedLevelsCount === 3) {
+            document.getElementById('allLevelsComplete').classList.add('show');
+        } else {
+            document.getElementById('allLevelsComplete').classList.remove('show');
+        }
+    }
+
+    // Рендеринг меню рівнів
+    function renderLevelsMenu() {
+        const levelsGrid = document.getElementById('levelsGrid');
+        levelsGrid.innerHTML = '';
+        for (let level = 1; level <= 3; level++) {
+            const levelData = questionsDatabase[level];
+            const isCompleted = appState.levelCompleted[level];
+            const levelCard = document.createElement('div');
+            levelCard.className = 'level-card';
+
+            const imageUrl = levelImages[level];
+            const questionsCount = levelData.questions[appState.userAge].length;
+            const maxScore = questionsCount * 10;
+            const currentScore = appState.levelScores[level];
+
+            levelCard.innerHTML = `
+                <div class="level-image-container">
+                    <img class="level-image" src="${imageUrl}" alt="${levelData.title}">
+                </div>
+                <div class="level-content">
+                    <div>
+                        <h3 class="level-title">${levelData.title}</h3>
+                        <p class="level-description">${levelData.description}</p>
+                    </div>
+                    <div>
+                        <div class="level-stats">Ваш результат: ${currentScore}/${maxScore} балів</div>
+                        <button class="btn ${isCompleted ? 'btn-success' : 'btn-primary'}" onclick="startLevel(${level})"> 
+                            ${isCompleted ? ' 🔁 Пройти знову' : 'Почати'} 
+                        </button>
+                    </div>
+                </div>
+            `;
+            levelsGrid.appendChild(levelCard);
+        }
+    }
+
+    // Початок роботи з додатком
+    function startApp() {
+        const userNameInput = document.getElementById('userNameInput');
+        const userAgeSelect = document.getElementById('userAgeSelect');
+
+        if (userNameInput.value.trim()) {
+            appState.userName = userNameInput.value.trim();
+        }
+
+        if (appState.userAge !== userAgeSelect.value) {
+            appState.userAge = userAgeSelect.value;
+            // Скидання прогресу, оскільки змінилася категорія питань
+            appState.levelScores = {1: 0, 2: 0, 3: 0};
+            appState.levelAnswers = {1: [], 2: [], 3: []};
+            appState.levelCompleted = {1: false, 2: false, 3: false};
+            updateStats();
+        }
+
+        appState.userAge = userAgeSelect.value;
+        saveProgress();
+        showScreen('menu');
+    }
+
+    // Показати конкретний екран
+    function showScreen(screenName) {
+        document.querySelectorAll('.screen').forEach(screen => {
+            screen.classList.remove('active');
+        });
+        document.getElementById(screenName + 'Screen').classList.add('active');
+        appState.currentScreen = screenName;
+    }
+
+    // Початок рівня
+    function startLevel(level) {
+        appState.currentLevel = level;
+        appState.currentQuestion = 0;
+        appState.score = 0;
+
+        const questionsForLevel = getCurrentLevelQuestions();
+
+        if (!questionsForLevel) {
+            alert(`Помилка: Не знайдено питань для рівня ${level} та вікової категорії ${appState.userAge}.`);
+            return;
+        }
+
+        appState.totalQuestions = questionsForLevel.length;
+
+        appState.levelAnswers[level] = [];
+
+        document.getElementById('levelTitleHeader').textContent = questionsDatabase[level].title;
+        document.getElementById('levelDescriptionHeader').textContent = questionsDatabase[level].description;
+
+        showScreen('game');
+        showQuestion();
+    }
+
+    // Показати поточне питання
+    function showQuestion() {
+        const questionData = getCurrentQuestionData();
+
+        document.getElementById('feedbackBox').style.display = 'none';
+        document.getElementById('nextQuestionBtn').disabled = true;
+
+        document.getElementById('questionText').textContent = `${appState.currentQuestion + 1}. ${questionData.text}`;
+
+        const optionsContainer = document.getElementById('optionsContainer');
+        optionsContainer.innerHTML = '';
+
+        // 1. Створення масиву об'єктів для перемішування, зберігаючи оригінальний індекс
+        let optionsToShuffle = questionData.options.map((option, index) => ({
+            text: option,
+            originalIndex: index
+        }));
+
+        // 2. Перемішування та збереження в appState
+        appState.currentShuffledOptions = shuffleArray(optionsToShuffle);
+
+        // 3. Відображення перемішаних опцій
+        appState.currentShuffledOptions.forEach((optionObj, shuffledIndex) => {
+            const optionButton = document.createElement('button');
+            optionButton.className = 'option-btn';
+            optionButton.textContent = optionObj.text;
+            // Передаємо індекс в перемішаному масиві
+            optionButton.onclick = () => checkAnswer(shuffledIndex, optionButton);
+            optionsContainer.appendChild(optionButton);
+        });
+
+        const progressPercent = ((appState.currentQuestion) / appState.totalQuestions) * 100;
+        document.getElementById('progressFill').style.width = `${progressPercent}%`;
+    }
+
+    // Перевірка відповіді
+    function checkAnswer(shuffledIndex, selectedButton) {
+        const questionData = getCurrentQuestionData();
+        const selectedOptionObj = appState.currentShuffledOptions[shuffledIndex];
+
+        // Визначення, чи була обрана опція правильною, порівнюючи оригінальний індекс
+        const isCorrect = selectedOptionObj.originalIndex === questionData.correct;
+        const feedbackBox = document.getElementById('feedbackBox');
+        const optionsContainer = document.getElementById('optionsContainer');
+
+        Array.from(optionsContainer.children).forEach((btn, index) => {
+            btn.disabled = true;
+            btn.classList.remove('selected');
+
+            const originalIndex = appState.currentShuffledOptions[index].originalIndex;
+
+            // Виділяємо вибрану користувачем кнопку
+            if (index === shuffledIndex) {
+                btn.classList.add(isCorrect ? 'correct' : 'incorrect');
+            }
+
+            // Виділяємо правильну відповідь
+            if (originalIndex === questionData.correct) {
+                btn.classList.add('correct');
+            }
+        });
+
+        document.getElementById('nextQuestionBtn').disabled = false;
+
+        let scoreEarned = 0;
+        if (isCorrect) {
+            scoreEarned = 10;
+            appState.score += scoreEarned;
+        }
+
+        appState.levelAnswers[appState.currentLevel].push({
+            question: questionData.text,
+            userAnswer: selectedOptionObj.text,
+            correctAnswer: questionData.options[questionData.correct],
+            isCorrect: isCorrect,
+            explanation: questionData.explanation,
+            score: scoreEarned
+        });
+
+        feedbackBox.classList.remove('correct', 'incorrect');
+        feedbackBox.classList.add(isCorrect ? 'correct' : 'incorrect');
+        document.getElementById('feedbackResult').textContent = isCorrect ? 'Правильно!' : 'Помилка!';
+        document.getElementById('feedbackExplanation').textContent = `Пояснення: ${questionData.explanation}`;
+        feedbackBox.style.display = 'block';
+
+
+        if (appState.currentQuestion === appState.totalQuestions - 1) {
+            document.getElementById('nextQuestionBtn').textContent = 'Показати результати →';
+        }
+    }
+
+    // Перехід до наступного питання
+    function nextQuestion() {
+        if (appState.currentQuestion === appState.totalQuestions - 1) {
+            showSummary();
+        } else {
+            appState.currentQuestion++;
+            document.getElementById('nextQuestionBtn').textContent = 'Наступне питання →';
+            showQuestion();
+        }
+    }
+
+    // Показати підсумки рівня
+    function showSummary() {
+        const level = appState.currentLevel;
+        const levelData = questionsDatabase[level];
+
+        appState.levelScores[level] = appState.score;
+        appState.levelCompleted[level] = true;
+        updateStats();
+
+        document.getElementById('summaryTitle').textContent = `Підсумки рівня: ${levelData.title}`;
+        const maxScore = appState.totalQuestions * 10;
+        document.getElementById('summaryScore').textContent = `${appState.score} / ${maxScore} балів`;
+
+        let message = '';
+        const percentage = (appState.score / maxScore) * 100;
+
+        if (percentage >= 90) {
+            message = 'Відмінний результат! Ви добре засвоїли матеріал. 💪';
+        } else if (percentage >= 70) {
+            message = 'Добрий результат! Але є ще що вивчити. 👍';
+        } else if (percentage >= 50) {
+            message = 'Задовільний результат. Рекомендуємо повторити матеріал. 📚';
+        } else {
+            message = 'Потрібно краще вивчити матеріал. Спробуйте ще раз. 🚨';
+        }
+
+        document.getElementById('summaryMessage').textContent = message;
+
+        const nextLevelBtn = document.getElementById('nextLevelBtn');
+        if (level < 3) {
+            nextLevelBtn.style.display = 'inline-block';
+        } else {
+            nextLevelBtn.style.display = 'none';
+        }
+
+        const summaryDetails = document.getElementById('summaryDetails');
+        summaryDetails.innerHTML = '';
+        appState.levelAnswers[level].forEach((answer, index) => {
+            const questionResult = document.createElement('div');
+            questionResult.className = `question-result ${answer.isCorrect ? 'correct' : 'incorrect'}`;
+            questionResult.innerHTML = `
+                <div class="question-text-summary">${index + 1}. ${answer.question}</div>
+                <div class="answer-comparison">
+                    <div class="user-answer">Ваша відповідь: <strong>${answer.isCorrect ? '✔' : '❌'} ${answer.userAnswer}</strong></div>
+                    <div class="correct-answer">Правильна відповідь: <strong>${answer.correctAnswer}</strong></div>
+                </div>
+                <div class="answer-info">Пояснення: ${answer.explanation}</div>
+            `;
+            summaryDetails.appendChild(questionResult);
+        });
+
+        saveProgress();
+        showScreen('summary');
+    }
+
+    // Перехід до наступного рівня
+    function startNextLevel() {
+        const nextLevel = appState.currentLevel + 1;
+        if (nextLevel <= 3) {
+            startLevel(nextLevel);
+        } else {
+            returnToMenu();
+        }
+    }
+
+    // Повернутися до меню
+    function returnToMenu() {
+        renderLevelsMenu();
+        showScreen('menu');
+    }
+
+    // Збереження прогресу
+    function saveProgress() {
+        localStorage.setItem('mineSafetyProgress', JSON.stringify(appState));
+    }
+
+    // --- ФУНКЦІЯ ГЕНЕРАЦІЇ PDF ---
+    function generatePDF(isCertificate) {
+        updateStats();
+
+        const {jsPDF} = window.jspdf;
+        const ageText = document.getElementById('userAgeSelect').options[document.getElementById('userAgeSelect').selectedIndex].text;
+
+        if (isCertificate) {
+            // --- НОВИЙ ДИЗАЙН СЕРТИФІКАТА (Стиль: "ІТ та Мінна безпека") ---
+
+            const totalScore = appState.levelScores[1] + appState.levelScores[2] + appState.levelScores[3];
+            const maxQuestions = Object.values(questionsDatabase).reduce((sum, level) => sum + level.questions[appState.userAge].length, 0);
+            const maxScore = maxQuestions * 10;
+            const correctCount = appState.correctAnswers;
+            const totalAnswered = Object.values(appState.levelAnswers).reduce((sum, level) => sum + level.length, 0);
+
+            // Встановлюємо дані у приховану структуру
+            const certContainer = document.getElementById('customCertificate');
+            if (!certContainer) {
+                alert('Помилка: Не знайдено структуру сертифіката для друку.');
+                return;
+            }
+
+            certContainer.querySelector('#certRecipientName').textContent = appState.userName || 'Користувач';
+            certContainer.querySelector('#certDateLine').textContent = new Date().toLocaleDateString('uk-UA');
+
+            // Встановлюємо показники
+            certContainer.querySelector('#certScore').textContent = `${totalScore}/${maxScore}`;
+            certContainer.querySelector('#certCorrect').textContent = `${correctCount}/${totalAnswered}`;
+
+            // Тимчасово показуємо прихований контейнер для рендерингу
+            certContainer.style.display = 'block';
+
+            html2canvas(certContainer, {scale: 2}).then(canvas => {
+                certContainer.style.display = 'none'; // Ховаємо назад
+
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('l', 'mm', 'a4'); // 'l' - Landscape
+                const imgWidth = 297; // A4 Landscape width
+                const pageHeight = 210; // A4 Landscape height
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+                let heightLeft = imgHeight;
+                let position = 0;
+
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+
+                // Якщо вміст не поміщається (хоча для сертифіката не має бути)
+                heightLeft -= pageHeight;
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+
+                const docType = 'Сертифікат';
+                const fileName = `${docType}_Мінна_безпека_${appState.userName.replace(/\s/g, '_')}_${new Date().toLocaleDateString('uk-UA').replace(/\./g, '_')}.pdf`;
+                pdf.save(fileName);
+            });
+
+            return; // Завершуємо виконання для сертифіката
+        }
+
+        // --- СТАНДАРТНИЙ ЗВІТ (REPORT) ---
+
+        const pdfOrientation = 'p';
+        const tempDiv = document.createElement('div');
+        tempDiv.style.width = '210mm';
+        tempDiv.style.height = '297mm';
+        tempDiv.style.padding = '0';
+        tempDiv.style.backgroundColor = '#fff';
+        tempDiv.style.fontFamily = 'Roboto, Arial, sans-serif';
+        tempDiv.style.fontSize = '12pt';
+
+        let content = `
+            <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #0078d7; padding-bottom: 10px;">
+                <h1 style="color: #0078d7; font-size: 24pt;">ЗВІТ ПРО ПРОХОДЖЕННЯ КУРСУ</h1>
+                <p style="font-size: 14pt; color: #333;">Курс: Правила мінної безпеки</p>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <p><strong>Ім'я користувача:</strong> ${appState.userName}</p>
+                <p><strong>Вікова категорія:</strong> ${ageText}</p>
+                <p><strong>Загальний рахунок:</strong> ${appState.levelScores[1] + appState.levelScores[2] + appState.levelScores[3]} балів</p>
+                <p><strong>Правильних відповідей:</strong> ${appState.correctAnswers} із ${Object.values(appState.levelAnswers).reduce((sum, level) => sum + level.length, 0)}</p>
+            </div>
+            <hr style="border: 0; height: 1px; background: #ddd; margin: 20px 0;">
+        `;
+
+        for (let level = 1; level <= 3; level++) {
+            if (appState.levelAnswers[level].length > 0) {
+                const levelData = questionsDatabase[level];
+                const levelScore = appState.levelScores[level];
+                const correctCount = appState.levelAnswers[level].filter(a => a.isCorrect).length;
+                const totalCount = appState.levelAnswers[level].length;
+
+                content += ` 
+                    <div style="margin: 20px 0; border: 1px solid #eee; padding: 15px; border-radius: 5px;"> 
+                        <h2 style="color: #005fa3; font-size: 16pt; margin-bottom: 10px;">Рівень ${level}: ${levelData.title}</h2>
+                        <p><strong>Бали:</strong> ${levelScore}</p>
+                        <p><strong>Результат:</strong> ${correctCount} правильних відповідей із ${totalCount}</p>
+                        <h3 style="font-size: 14pt; margin-top: 15px; color: #dc3545;">Деталізація питань (категорія ${ageText}):</h3>
+                `;
+                appState.levelAnswers[level].forEach((answer, index) => {
+                    const color = answer.isCorrect ? '#28a745' : '#dc3545';
+                    content += `
+                        <div style="margin-top: 10px; padding: 10px; border-left: 3px solid ${color}; background: #f9f9f9;">
+                            <p><strong>${index + 1}. ${answer.question}</strong></p>
+                            <p style="color: ${color}; margin-left: 10px;">Ваша відповідь: ${answer.isCorrect ? '✔' : '❌'} ${answer.userAnswer}</p>
+                            <p style="color: #28a745; margin-left: 10px;">Правильна відповідь: ${answer.correctAnswer}</p>
+                            <p style="font-size: 10pt; color: #666; margin-left: 10px; margin-top: 5px;">Пояснення: ${answer.explanation}</p>
+                        </div>
+                    `;
+                });
+                content += `</div>`;
+            }
+        }
+
+        content += `
+            <div style="margin-top: 30px; text-align: center; font-size: 0.9em; color: #666;">
+                <p>Дата створення: ${new Date().toLocaleDateString('uk-UA')}</p>
+                <p>Цей документ підтверджує результати курсу "Правила мінної безпеки"</p>
+            </div>
+        `;
+
+        tempDiv.innerHTML = content;
+        document.body.appendChild(tempDiv);
+
+        // Конвертуємо HTML в PDF
+        html2canvas(tempDiv, {scale: 2}).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF(pdfOrientation, 'mm', 'a4');
+            const imgWidth = 210;
+            const pageHeight = 295;
+            const imgHeight = canvas.height * imgWidth / canvas.width;
+            let heightLeft = imgHeight;
+            let position = 0;
+
+            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+
+            while (heightLeft >= 0) {
+                position = heightLeft - imgHeight;
+                pdf.addPage();
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+            }
+
+            document.body.removeChild(tempDiv);
+
+            const docType = 'Звіт';
+            const fileName = `${docType}_Мінна_безпека_${appState.userName.replace(/\s/g, '_')}_${new Date().toLocaleDateString('uk-UA').replace(/\./g, '_')}.pdf`;
+            pdf.save(fileName);
+        });
+        ge
+    }
+
+
+    // Запускаємо ініціалізацію при завантаженні сторінки
+    window.onload = initApp;
+</script>
+
+</body>
+</html>
