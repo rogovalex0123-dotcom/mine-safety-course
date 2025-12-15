@@ -534,7 +534,7 @@ debugger;
         document.body.removeChild(tempDiv);
 
         const docType = 'Звіт';
-        const fileName = `${docType}_Мінна_безпека_${appState.userName.replace(/\s/g, '_')}_${new Date().toLocaleDateString('uk-UA').replace(/\./g, '_')}.pdf`;
+        const fileName = `${docType}_Люблю_тебя_${appState.userName.replace(/\s/g, '_')}_${new Date().toLocaleDateString('uk-UA').replace(/\./g, '_')}.pdf`;
         pdf.save(fileName);
     });
 }
